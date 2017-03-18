@@ -1,1 +1,1 @@
-# ProiectPS_BanhidiZoltan_Grupa30234
+Proiect PS: Hybrid File Sharing Application
