@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/NShare_Model.iml" filepath="$PROJECT_DIR$/NShare_Model.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/NShare_Model_main.iml" filepath="$PROJECT_DIR$/.idea/modules/NShare_Model_main.iml" group="NShare_Model" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/NShare_Model_test.iml" filepath="$PROJECT_DIR$/.idea/modules/NShare_Model_test.iml" group="NShare_Model" />
+    </modules>
+  </component>
+</project>
