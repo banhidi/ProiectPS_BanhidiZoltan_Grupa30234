@@ -26,11 +26,13 @@ public class UserController {
         try {
             dataModel.User u = StorageBuilder.getUserStorage().getUser(username, password);
             if (u == null)
-                return new ResponseEntity<dataModel.User>(HttpStatus.NOT_FOUND);
+                return new ResponseEntity(
+                        "Username or password is incorrect.",
+                        HttpStatus.INTERNAL_SERVER_ERROR);
             else
                 return new ResponseEntity<dataModel.User>(u, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -48,13 +50,9 @@ public class UserController {
     public ResponseEntity<List<User>> getUser() {
         try {
             List<User> usersList = StorageBuilder.getUserStorage().getAllUsers();
-            for (User u : usersList)
-                System.out.println(u);
-            System.out.println(usersList.getClass().toString());
-            System.out.println(usersList.get(0).getClass().toString());
-            return new ResponseEntity<>(usersList, HttpStatus.OK);
+            return new ResponseEntity(usersList, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -63,12 +61,15 @@ public class UserController {
         try {
             UserStorage userStorage = StorageBuilder.getUserStorage();
             if (userStorage.getUser(user.getUsername()) != null)
-                return new ResponseEntity<String>("This username already exists.", HttpStatus.INTERNAL_SERVER_ERROR);
-            else
+                return new ResponseEntity(
+                        "This username already exists.",
+                        HttpStatus.INTERNAL_SERVER_ERROR);
+            else {
                 userStorage.insertUser(user);
-            return new ResponseEntity<Boolean>(HttpStatus.OK);
+                return new ResponseEntity<Boolean>(HttpStatus.OK);
+            }
         } catch(Exception e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -78,7 +79,7 @@ public class UserController {
             StorageBuilder.getUserStorage().deleteUser(id);
             return new ResponseEntity(HttpStatus.OK);
         } catch(Exception e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

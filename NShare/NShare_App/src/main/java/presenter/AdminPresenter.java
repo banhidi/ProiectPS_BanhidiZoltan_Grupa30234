@@ -44,8 +44,6 @@ public class AdminPresenter {
                 new ParameterizedTypeReference<List<User>>() {
                 }
         );
-        System.out.println(response.getBody().getClass().toString());
-        System.out.println(response.getBody().get(0).getClass());
         List usersList = response.getBody();
         return usersList;
     }

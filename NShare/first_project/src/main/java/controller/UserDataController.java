@@ -26,7 +26,8 @@ public class UserDataController {
                 StorageBuilder.getUserDataStorage().addUserData(userData);
                 return new ResponseEntity(HttpStatus.OK);
             } else {
-                return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+                StorageBuilder.getUserDataStorage().modifyUserData(userData);
+                return new ResponseEntity(HttpStatus.OK);
             }
         } catch(Exception e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

@@ -56,12 +56,20 @@ public class RegularPresenter {
         userId = id;
     }
 
-    public void addNewFile() {
+    public void addNewImage() {
         User u = regularView.getSelectedUser();
         if (u == null) {
             regularView.showErrorMessage("Please select a user.");
         } else
             regularView.showImageView(new UserData(-1, userId, u.getId()));
+    }
+
+    public void addNewFile() {
+        User u = regularView.getSelectedUser();
+        if (u == null) {
+            regularView.showErrorMessage("Please select a user.");
+        } else
+            regularView.showFileView(new UserData(-1, userId, u.getId()));
     }
 
     public void fileDoubleClicked() {
@@ -81,9 +89,23 @@ public class RegularPresenter {
                             UserData.class
                     );
                     UserData userData = response.getBody();
-                    Platform.runLater(() -> {
-                        regularView.showImageView(userData);
-                    });
+                    switch(userData.getType()) {
+                        case "image":
+                            Platform.runLater(() -> {
+                                regularView.showImageView(userData);
+                            });
+                            break;
+                        case "other":
+                            Platform.runLater(() -> {
+                                regularView.showFileView(userData);
+                            });
+                            break;
+                        default:
+                            Platform.runLater(() -> {
+                                regularView.showErrorMessage("Unrecognized type.");
+                            });
+                    }
+
                 } catch (HttpServerErrorException e) {
                     Platform.runLater(() -> {
                         regularView.showErrorMessage(e.getResponseBodyAsString());
@@ -165,13 +187,16 @@ public class RegularPresenter {
                     regularView.setOnCloseEvent((e) -> {
                         System.exit(0);
                     });
+                    Platform.runLater(() -> {
+                        regularView.setErrorLabel("");
+                    });
                 } catch (HttpServerErrorException e) {
                     Platform.runLater(() -> {
-                        regularView.showErrorMessage(e.getResponseBodyAsString());
+                        regularView.setErrorLabel(e.getResponseBodyAsString());
                     });
                 } catch (RestClientException e) {
                     Platform.runLater(() -> {
-                        regularView.showErrorMessage("Can't connect to the server.");
+                        regularView.setErrorLabel("Can't connect to the server.");
                     });
                 } catch (Exception e) {
                     Platform.runLater(() -> {
@@ -204,13 +229,17 @@ public class RegularPresenter {
                         Platform.runLater(() -> {
                             regularView.setSharedFilesList(FXCollections.observableArrayList(sharedFilesList));
                         });
+                    Platform.runLater(() -> {
+                        regularView.setErrorLabel("");
+                    });
                 } catch (HttpServerErrorException e) {
                     Platform.runLater(() -> {
-                        regularView.showErrorMessage(e.getResponseBodyAsString());
+                        regularView.setErrorLabel(e.getResponseBodyAsString());
+
                     });
                 } catch (RestClientException e) {
                     Platform.runLater(() -> {
-                        regularView.showErrorMessage("Can't connect to the server.");
+                        regularView.setErrorLabel("Can't connect to the server.");
                     });
                 } catch (Exception e) {
                     Platform.runLater(() -> {

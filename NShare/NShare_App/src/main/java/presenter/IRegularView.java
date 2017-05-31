@@ -29,5 +29,7 @@ public interface IRegularView {
     void setSharedFilesList(ObservableList<LightweightUserData> fileList);
     LightweightUserData getSelectedSharedFile();
     void showImageView(UserData userData);
+    void showFileView(UserData userData);
+    void setErrorLabel(String text);
 
 }

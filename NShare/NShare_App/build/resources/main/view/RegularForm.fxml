@@ -67,8 +67,12 @@
             </columns>
         </TableView>
 
-        <HBox alignment="CENTER">
-            <Button onAction="#addNewFileButtonAction" text="+"/>
+        <HBox alignment="CENTER" spacing="20">
+            <Button onAction="#addNewImageButtonAction" text="+ Image"/>
+            <Button onAction="#addNewFileButtonAction" text="+ File"/>
+        </HBox>
+        <HBox alignment="CENTER_RIGHT">
+            <Label fx:id="errorLabel" text="" style="-fx-text-fill: red;"/>
         </HBox>
     </VBox>
 </HBox>

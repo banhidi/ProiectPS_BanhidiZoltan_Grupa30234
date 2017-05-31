@@ -2,13 +2,8 @@ package presenter;
 
 import dataModel.User;
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import security.HashSecurity;
@@ -61,29 +56,26 @@ public class LoginPresenter {
                             loginView.showErrorMessage("User has invalid type.");
                         });
                 }
-
-            } catch (ResourceAccessException ex) {
+            } catch (HttpServerErrorException ex) {
                 Platform.runLater(() -> {
-                    loginView.setErrorLabel("Can't connect to the server.");
-                    loginView.setProgressIndicatorVisible(false);
-                });
-            } catch (HttpClientErrorException ex) {
-                Platform.runLater(() -> {
-                    loginView.setErrorLabel("Invalid username or password");
+                    loginView.setErrorLabel(ex.getResponseBodyAsString());
                     loginView.setProgressIndicatorVisible(false);
                 });
             } catch (RestClientException ex) {
                 Platform.runLater(() -> {
                     loginView.setProgressIndicatorVisible(false);
-                    loginView.showErrorMessage("Internal system error occured when communicating eith the server.");
-                    Platform.exit();
+                    loginView.showErrorMessage("Internal system error occured when communicating with the server.");
                 });
             } catch(NoSuchAlgorithmException ex) {
                 loginView.setProgressIndicatorVisible(false);
                 loginView.showErrorMessage("Internal system error. Can't found hash function.");
-                Platform.exit();
+                System.exit(0);
+            } catch(Exception e) {
+                loginView.showErrorMessage("Internal system error occured.");
+                System.exit(0);
             }
         };
+
         Thread t = new Thread(loginTask);
         t.start();
     }

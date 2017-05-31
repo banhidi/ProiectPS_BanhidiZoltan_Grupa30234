@@ -42,6 +42,9 @@ public class ImagePresenter {
                     false
             ));
         }
+        if (userData.getLastModified() != null) {
+            imageView.setDatePicker(userData.getLastModified().toLocalDate());
+        }
     }
 
     public void chooseFile() {
@@ -67,8 +70,6 @@ public class ImagePresenter {
                         Platform.runLater(() -> {
                             imageView.showErrorMessage("Cant't read from specified file.");
                         });
-                    } catch (Exception e) {
-
                     }
                 }
             };
@@ -202,6 +203,8 @@ public class ImagePresenter {
                     imageView.showErrorMessage("Invalid name.");
                 }
             }
+        } else {
+            imageView.showErrorMessage("Nothing to save.");
         }
     }
 

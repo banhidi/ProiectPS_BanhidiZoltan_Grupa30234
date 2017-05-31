@@ -14,10 +14,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import presenter.IDataView;
-import presenter.IImageView;
-import presenter.IRegularView;
-import presenter.RegularPresenter;
+import presenter.*;
 
 import java.io.IOException;
 
@@ -37,6 +34,8 @@ public class RegularView implements IRegularView {
     private TextArea messageTextArea;
     @FXML
     private TableView sharedFilesTable;
+    @FXML
+    private Label errorLabel;
 
     public void initialize() {
         presenter = new RegularPresenter(this);
@@ -141,9 +140,32 @@ public class RegularView implements IRegularView {
             stage.setScene(new Scene(p));
             stage.show();
         } catch(IOException e) {
-            showErrorMessage("Internal system error: can't load data form.");
+            showErrorMessage("Internal system error: can't load image form.");
             System.exit(0);
         }
+    }
+
+    @Override
+    public void showFileView(UserData userData) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("FileForm.fxml"));
+            Parent p = loader.load();
+
+            IFileView fileView = (IFileView) loader.getController();
+            fileView.setUserData(userData);
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(p));
+            stage.show();
+        } catch(IOException e) {
+            showErrorMessage("Internal system error: can't load file form.");
+            System.exit(0);
+        }
+    }
+
+    @Override
+    public void setErrorLabel(String text) {
+        errorLabel.setText(text);
     }
 
     @FXML
@@ -154,6 +176,11 @@ public class RegularView implements IRegularView {
     @FXML
     private void logoutButtonAction(ActionEvent ae) {
         presenter.logout();
+    }
+
+    @FXML
+    private void addNewImageButtonAction(ActionEvent ae) {
+        presenter.addNewImage();
     }
 
     @FXML

@@ -67,7 +67,12 @@ public class LightweightUserData {
 
     public boolean equals(Object o) {
         if (o instanceof LightweightUserData) {
-            return ((LightweightUserData) o).getId() == id;
+            LightweightUserData l = (LightweightUserData) o;
+            return l.getId() == id &&
+                    l.getType().equals(type) &&
+                    l.getDescription().equals(description) &&
+                    l.getUserIdA() == userIdA &&
+                    l.getUserIdB() == userIdB;
         } else
             return false;
     }
