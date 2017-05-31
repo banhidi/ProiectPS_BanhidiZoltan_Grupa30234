@@ -1,20 +1,19 @@
 package view;
 
-import dataModel.User;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.ResourceAccessException;
-import org.springframework.web.client.RestTemplate;
+import presenter.IAdminView;
 import presenter.ILoginView;
+import presenter.IRegularView;
 import presenter.LoginPresenter;
+
+import java.io.IOException;
 
 /**
  * Created by banhidi on 5/22/2017.
@@ -28,6 +27,8 @@ public class LoginView implements ILoginView {
     private PasswordField passwordField;
     @FXML
     private Label errorLabel;
+    @FXML
+    private ProgressIndicator progressIndicator;
 
     public LoginView() {
         loginPresenter = new LoginPresenter(this);
@@ -63,7 +64,7 @@ public class LoginView implements ILoginView {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setContentText(message);
-        alert.show();
+        alert.showAndWait();
     }
 
     @Override
@@ -74,6 +75,50 @@ public class LoginView implements ILoginView {
     @Override
     public Stage getStage() {
         return (Stage) errorLabel.getScene().getWindow();
+    }
+
+    public void setProgressIndicatorVisible(boolean b) {
+        progressIndicator.setVisible(b);
+    }
+
+    public void showAdminView(String name, String username) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AdminForm.fxml"));
+            Parent p = loader.load();
+            Scene scene = new Scene(p);
+
+            IAdminView adminView = loader.getController();
+            adminView.setUser(name, username);
+
+            Stage stage = (Stage) errorLabel.getScene().getWindow();
+            stage.setScene(scene);
+            stage.centerOnScreen();
+            stage.show();
+        } catch(IOException e) {
+            showErrorMessage("Internal system error. Can't find admin form.");
+            Platform.exit();
+        }
+    }
+
+    @Override
+    public void showRegularView(String name, String username, int id) {
+        try {
+            FXMLLoader loader = new FXMLLoader(LoginView.class.getResource("/view/RegularForm.fxml"));
+            Parent p = loader.load();
+            Scene scene = new Scene(p);
+
+            IRegularView regularView = loader.getController();
+            regularView.setUser(name, username, id);
+
+            Stage stage = (Stage) errorLabel.getScene().getWindow();
+            stage.setScene(scene);
+            stage.centerOnScreen();
+            stage.show();
+        } catch(IOException e) {
+            //System.out.println(e.getMessage());
+            showErrorMessage("Internal system error. Can't find regular form.");
+            System.exit(0);
+        }
     }
 
 }

@@ -9,4 +9,12 @@ public class StorageBuilder {
         return new MySqlUserStorage();
     }
 
+    public static MySqlMessageStorage getMessageStorage() {
+        return new MySqlMessageStorage();
+    }
+
+    public static UserDataStorage getUserDataStorage() {
+        return new MySqlUserDataStorage();
+    }
+
 }

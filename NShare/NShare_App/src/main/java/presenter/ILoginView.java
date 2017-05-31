@@ -19,4 +19,8 @@ public interface ILoginView {
 
     Stage getStage();
 
+    void setProgressIndicatorVisible(boolean b);
+    void showAdminView(String name, String username);
+    void showRegularView(String name, String username, int id);
+
 }

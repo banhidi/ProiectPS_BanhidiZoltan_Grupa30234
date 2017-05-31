@@ -1,21 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.collections.FXCollections?>
+<HBox fx:controller="view.AdminView" xmlns:fx="http://javafx.com/fxml">
+    <FlowPane orientation="VERTICAL"
+              vgap="5" alignment="BASELINE_LEFT" prefWidth="600" prefHeight="330">
+        <padding>
+            <Insets top="5" bottom="5" left="15" right="15"/>
+        </padding>
 
-<GridPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="view.AdminView">
+        <FlowPane hgap="10" alignment="BASELINE_LEFT"
+                  GridPane.rowIndex="0" GridPane.columnIndex="0">
+            <padding>
+                <Insets top="10" bottom="10" left="10" right="10"/>
+            </padding>
+            <Button text="Account" disable="true"/>
+            <Label fx:id="userLabel" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        </FlowPane>
 
-    <Label fx:id="userLabel" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+        <TableView fx:id="usersTable" prefWidth="550" prefHeight="250">
+            <columns>
+                <TableColumn text="ID">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="id"/>
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn text="Name">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="name"/>
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn text="Username">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="Username"/>
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn text="Type">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="type"/>
+                    </cellValueFactory>
+                </TableColumn>
+            </columns>
+        </TableView>
+    </FlowPane>
 
-    <Button fx:id="addButton" text="Add" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-    <Button fx:id="modifyButton" text="Modify" GridPane.rowIndex="1" GridPane.columnIndex="1" />
-    <Button fx:id="removeButton" text="Remove" GridPane.rowIndex="1" GridPane.columnIndex="2" />
+    <GridPane hgap="5" vgap="10" alignment="CENTER_RIGHT">
+        <padding>
+            <Insets left="10" right="10"/>
+        </padding>
 
+        <HBox GridPane.rowIndex="0" GridPane.columnIndex="0" alignment="CENTER_RIGHT">
+            <Label text="Name:"/>
+        </HBox>
+        <TextField fx:id="nameField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
+        <HBox GridPane.rowIndex="1" GridPane.columnIndex="0" alignment="CENTER_RIGHT">
+            <Label text="Username:"/>
+        </HBox>
+        <TextField fx:id="usernameField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-</GridPane>
+        <HBox GridPane.rowIndex="2" GridPane.columnIndex="0" alignment="CENTER_RIGHT">
+            <Label text="Password:"/>
+        </HBox>
+        <PasswordField fx:id="passwordField1" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <HBox GridPane.rowIndex="3" GridPane.columnIndex="0" alignment="CENTER_RIGHT">
+            <Label text="Repeat password:"/>
+        </HBox>
+        <PasswordField fx:id="passwordField2" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+        <fx:define>
+            <ToggleGroup fx:id="typeGroup"/>
+        </fx:define>
+
+        <VBox alignment="CENTER" spacing="5"
+              GridPane.rowIndex="4" GridPane.columnIndex="0" GridPane.columnSpan="2">
+            <RadioButton fx:id="adminRadioButton" toggleGroup="$typeGroup" text="Administaror"/>
+            <RadioButton fx:id="regularRadioButton" toggleGroup="$typeGroup" text="Regular user"/>
+        </VBox>
+
+        <HBox spacing="10" GridPane.rowIndex="5" GridPane.columnIndex="0"
+              GridPane.columnSpan="2" alignment="CENTER">
+            <Button text="Add" onAction="#addButtonAction"/>
+            <Button text="Modify" onAction="#modifyButtonAction"/>
+            <Button text="Remove" onAction="#removeButtonAction"/>
+        </HBox>
+    </GridPane>
+
+    <HBox alignment="TOP_RIGHT">
+        <padding>
+            <Insets top="15" right="25"/>
+        </padding>
+        <Button text="Logout" onAction="#logoutButtonAction"/>
+    </HBox>
+</HBox>

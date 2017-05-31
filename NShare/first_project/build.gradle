@@ -27,6 +27,7 @@ targetCompatibility = 1.8
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("mysql:mysql-connector-java:5.1.6")
+    compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.8")
     compile fileTree(dir:"lib", include:['*.jar'])
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }

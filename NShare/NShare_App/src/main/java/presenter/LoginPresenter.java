@@ -11,6 +11,9 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import security.HashSecurity;
+
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Created by banhidi on 5/24/2017.
@@ -24,44 +27,61 @@ public class LoginPresenter {
     }
 
     public void login() {
+        loginView.setProgressIndicatorVisible(true);
+        loginView.setErrorLabel("");
+        String username = loginView.getUsername();
+        String password = loginView.getPassword();
         Runnable loginTask = () -> {
             RestTemplate temp = new RestTemplate();
             try {
+                HashSecurity hashSecurity = new HashSecurity();
                 ResponseEntity<?> response = temp.getForEntity(
-                        "http://localhost:8080/api/users?username={username}&password={password}",
+                        "http://localhost:8080/api/users/authentify?username={username}&password={password}",
                         User.class,
-                        loginView.getUsername(),
-                        loginView.getPassword());
-                Platform.runLater(() -> {
-                    try {
-                        User adminUser = (User) response.getBody();
+                        username,
+                        hashSecurity.applyHashFunction(password));
 
-                        FXMLLoader loader = new FXMLLoader(loginView.getClass().getResource("AdminForm.fxml"));
-                        Parent p = loader.load();
-                        Scene scene = new Scene(p, 300, 300);
+                User user = (User) response.getBody();
+                switch(user.getType()) {
+                    case "admin":
+                        Platform.runLater(() -> {
+                            loginView.showAdminView(user.getName(), user.getUsername());
+                            loginView.setProgressIndicatorVisible(false);
+                        });
+                        break;
+                    case "regular":
+                        Platform.runLater(() -> {
+                            loginView.showRegularView(user.getName(), user.getUsername(), user.getId());
+                            loginView.setProgressIndicatorVisible(false);
+                        });
+                        break;
+                    default:
+                        Platform.runLater(() -> {
+                            loginView.setProgressIndicatorVisible(false);
+                            loginView.showErrorMessage("User has invalid type.");
+                        });
+                }
 
-                        IAdminView adminView = loader.getController();
-                        adminView.setUser(adminUser.getName(), adminUser.getUsername());
-
-                        Stage stage = loginView.getStage();
-                        stage.setScene(scene);
-                        stage.show();
-                    } catch(Exception ex) {
-                        loginView.showErrorMessage("Internal system error.");
-                    }
-                    System.out.println(response.getBody());
-                });
             } catch (ResourceAccessException ex) {
-                Platform.runLater(() ->
-                        loginView.setErrorLabel("Can't connect to the server"));
+                Platform.runLater(() -> {
+                    loginView.setErrorLabel("Can't connect to the server.");
+                    loginView.setProgressIndicatorVisible(false);
+                });
             } catch (HttpClientErrorException ex) {
-                Platform.runLater(() ->
-                        loginView.setErrorLabel("Invalid username or password"));
+                Platform.runLater(() -> {
+                    loginView.setErrorLabel("Invalid username or password");
+                    loginView.setProgressIndicatorVisible(false);
+                });
             } catch (RestClientException ex) {
                 Platform.runLater(() -> {
-                    loginView.showErrorMessage("Internal system error.");
+                    loginView.setProgressIndicatorVisible(false);
+                    loginView.showErrorMessage("Internal system error occured when communicating eith the server.");
                     Platform.exit();
                 });
+            } catch(NoSuchAlgorithmException ex) {
+                loginView.setProgressIndicatorVisible(false);
+                loginView.showErrorMessage("Internal system error. Can't found hash function.");
+                Platform.exit();
             }
         };
         Thread t = new Thread(loginTask);

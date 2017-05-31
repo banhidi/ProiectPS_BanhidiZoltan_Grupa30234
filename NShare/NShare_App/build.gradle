@@ -26,13 +26,17 @@ targetCompatibility = 1.8
 
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
+    compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.8")
     compile fileTree(dir:'lib', include:['*.jar'])
 }
 
 sourceSets {
     main {
         java {
-            include 'resources/view/**.fxml'
+            srcDir 'src/main/java'
+        }
+        resources {
+            srcDir 'src/main/resources'
         }
     }
 }

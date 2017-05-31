@@ -18,7 +18,7 @@ public class MainClass extends Application {
     public void start(Stage stage) {
         try {
             Parent p = FXMLLoader.load(getClass().getResource("LoginForm.fxml"));
-            Scene scene = new Scene(p, 300, 300);
+            Scene scene = new Scene(p);
             stage.setTitle("Welcome to NShare");
             stage.setScene(scene);
             stage.show();
